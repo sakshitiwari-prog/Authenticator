@@ -1,0 +1,14 @@
+# Ignore environment files
+authenticator/.env*
+authenticator-server/.env*
+
+# Ignore build outputs (if applicable)
+authenticator/build/
+authenticator-server/build/
+authenticator/node_modules/
+authenticator-server/node_modules/
+
+# Ignore logs
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
