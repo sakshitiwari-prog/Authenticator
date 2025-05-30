@@ -30,6 +30,8 @@ const VerifyOtp = () => {
       });
 
       if (response.success) {
+        localStorage.setItem('token', response?.token);
+
         navigate('/');
       } else {
         setFieldError('otp', response.message || 'Invalid OTP');

@@ -1,9 +1,10 @@
 const QRToken = require('../models/qrTokenModel');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-
+require('dotenv').config();
 exports.generateQr = async (req, res) => {
   const token = crypto.randomBytes(20).toString('hex');
+console.log(token,'token');
 
   await QRToken.create({ token });
 
@@ -31,9 +32,11 @@ exports.scanQr = async (req, res) => {
     const qrToken = await QRToken.findOne({ token });
   
     if (!qrToken) return res.status(404).send({ success: false, message: 'Token expired or not found' });
-  
+
     if (qrToken.scanned) {
       const jwtToken = jwt.sign({ email: qrToken.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+      console.log({ success: true, token: jwtToken },qrToken,'qrToken');
+  
       await qrToken.deleteOne(); 
       return res.cookie('authToken', jwtToken, {
         httpOnly: true,

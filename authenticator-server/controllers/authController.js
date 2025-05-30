@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const OTP = require('../models/otpModel');
-
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'; // Use .env in production
+require('dotenv').config();
+const JWT_SECRET = process.env.JWT_SECRET 
 
 const otpGenerator = require('otp-generator');
 const sendEmail = require('../config/mailer');
@@ -45,7 +45,7 @@ exports.verifyOtp = async (req, res) => {
     if (!otpRecord) {
       return res.status(400).send({ success: false, message: 'Invalid OTP' });
     }
-
+console.log(otpRecord, 'otpRecord');
     await otpRecord.deleteOne();
 
     // Generate JWT

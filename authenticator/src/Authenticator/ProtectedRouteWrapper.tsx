@@ -1,11 +1,10 @@
-// components/RedirectIfAuth.tsx
+// components/ProtectedRouteWrapper.tsx
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
 
 const ProtectedRouteWrapper = ({ children }: { children: React.ReactNode }) => {
-  const token = Cookies.get('authToken');
-  return token ? <Navigate to="/" replace /> : <>{children}</>;
+  const token = localStorage.getItem('token');
+  return token ? <>{children}</> : <Navigate to="/login" replace />;
 };
 
 export default ProtectedRouteWrapper;

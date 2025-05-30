@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Html5Qrcode, Html5QrcodeScanner } from 'html5-qrcode';
 import { post } from '../utils/serviceHelper';
+import Cookies from 'js-cookie';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -28,28 +29,39 @@ const Home = () => {
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
-
+  
     const qrCodeScanner = new Html5Qrcode("qr-reader");
-
+  
     try {
       const decodedText = await qrCodeScanner.scanFile(file, true);
-
+  
       console.log("Decoded from image:", decodedText);
       setScanResult(decodedText);
-
+  
       const email = localStorage.getItem('userEmail') || '';
       if (email) {
         await sendScanToBackend(decodedText, email);
       }
-
-    } catch (err) {
+  
+    } catch (err: any) {
       console.error("Failed to decode QR from image:", err);
+  
+      // Show clearer error message
+      alert(
+        `Failed to scan QR code from the uploaded image.\n\n` +
+        `Error: ${err.message || 'Unknown error'}\n` +
+        `Possible reasons:\n` +
+        `✅ QR code is blurry or not clear.\n` +
+        `✅ File is not a valid image.\n` +
+        `✅ QR code in image is partially cut or not visible.`
+      );
     }
   };
+  
 
   const handleLogout = () => {
     document.cookie = 'authToken=; Max-Age=0';
-    localStorage.removeItem('authToken');
+    localStorage.removeItem('token');
     navigate('/login');
   };
 
@@ -103,7 +115,16 @@ const Home = () => {
       stopScanning();
     };
   }, [isScanning]);
-
+  const token = localStorage.getItem('token');
+  
+  useEffect(() => {
+    console.log(token,'token');
+    
+    if(!token){
+      navigate('/login');
+    }
+  }, [token]);
+  console.log(token,'token-----------');
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 px-6 py-12 space-y-8">
       <h1 className="text-3xl font-bold text-gray-800">Welcome to Your Dashboard</h1>
