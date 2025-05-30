@@ -21,7 +21,7 @@ jobs:
 
     - name: Install dependencies
       working-directory: ./authenticator
-      run: npm ci
+      run: npm ci --legacy-peer-deps
 
     - name: Run tests
       working-directory: ./authenticator
