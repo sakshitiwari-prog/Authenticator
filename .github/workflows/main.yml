@@ -17,16 +17,20 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20'  # specify your Node.js version
+        node-version: '20'
 
     - name: Install dependencies
-      run: npm install
+      working-directory: ./authenticator
+      run: npm ci
 
     - name: Run tests
+      working-directory: ./authenticator
       run: npm test
 
     - name: Build project
+      working-directory: ./authenticator
       run: npm run build
+
 
     # Optional: deploy step
     # - name: Deploy
